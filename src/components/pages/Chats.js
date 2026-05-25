@@ -82,7 +82,7 @@ export default function Chats() {
 
         wsInitialized.current = true;
         const token = localStorage.getItem("token");
-        const socket = new WebSocket(`ws://10.192.6.193:8080/api/chats/ws?token=${token}`);
+        const socket = new WebSocket(`wss://medora-server-production.up.railway.app/api/chats/ws?token=${token}`);
         ws.current = socket;
 
         socket.onmessage = async (event) => {
