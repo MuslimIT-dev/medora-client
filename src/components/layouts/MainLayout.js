@@ -66,15 +66,41 @@ export default function MainLayout() {
     }, [user?.id]);
 
     return (
-        <div className="flex flex-col min-h-screen text-pistachio-dark text-lg p-4">
-            <header className="grid grid-cols-5 gap-4 rounded-lg shadow-md p-4 shrink-0 sticky top-4 z-[100] bg-white">
-                <Link to={roleKey === 'user' ? "/" : `/${roleKey}`} className="flex items-center font-bold col-span-1">
-                    MEDORA {isPro && <span className="ml-2 text-[10px] bg-pistachio-light text-white px-2 py-0.5 rounded uppercase tracking-tighter">{roleKey}</span>}
-                </Link>
+        <div className="flex flex-col min-h-screen text-pistachio-dark text-lg p-2 sm:p-4 max-w-full overflow-x-hidden">
+            {/* Адаптивная шапка: на мобильных в стек/ряд, на md: в сетку */}
+            <header className="flex flex-col gap-3 md:grid md:grid-cols-5 md:gap-4 rounded-lg shadow-md p-4 shrink-0 sticky top-2 z-[100] bg-white">
+                <div className="flex items-center justify-between md:col-span-1">
+                    <Link to={roleKey === 'user' ? "/" : `/${roleKey}`} className="flex items-center font-bold break-all">
+                        MEDORA {isPro && <span className="ml-2 text-[10px] bg-pistachio-light text-white px-2 py-0.5 rounded uppercase tracking-tighter">{roleKey}</span>}
+                    </Link>
+                    
+                    {/* Кнопки уведомлений и профиля для мобильных (дублируются в разметке для сохранения порядка на десктопе) */}
+                    <div className="flex items-center gap-4 md:hidden">
+                        <Link to={roleKey === 'user' ? "/notifications" : `/${roleKey}/notifications`} className="relative flex items-center justify-center">
+                            <button className="text-xl hover:scale-110 transition-transform">{"\u{1F514}"}</button>
+                            {unreadCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-pulse">
+                                    {unreadCount}
+                                </span>
+                            )}
+                        </Link>
+                        
+                        <div className="group relative cursor-pointer px-2 flex items-center">
+                            {"\u{1F464}"}
+                            <div className="hidden group-hover:block transition-all">
+                                <ProfileActions />
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
-                <SearchArea />
+                {/* Зона поиска занимает всю ширину на мобилках */}
+                <div className="w-full md:col-span-3">
+                    <SearchArea />
+                </div>
 
-                <div className="col-span-1 flex justify-end gap-4 py-2">
+                {/* Блок действий для десктопа (скрыт на мобильных) */}
+                <div className="hidden md:col-span-1 md:flex justify-end gap-4 py-2">
                     <Link to={roleKey === 'user' ? "/notifications" : `/${roleKey}/notifications`} className="relative flex items-center justify-center">
                         <button className="text-xl hover:scale-110 transition-transform">{"\u{1F514}"}</button>
                         {unreadCount > 0 && (
@@ -93,31 +119,36 @@ export default function MainLayout() {
                 </div>
             </header>
 
-            <section className="grid grid-cols-5 py-4 flex-1">
-                <aside className="col-span-1 py-4 sticky top-24 h-fit">
-                    <nav className="flex flex-col gap-4">
+            {/* Основной контент: на мобильных в одну колонку, на md: боковая панель + контент */}
+            <section className="flex flex-col md:grid md:grid-cols-5 py-4 flex-1 gap-4">
+                {/* Навигация: на мобильных горизонтальная прокрутка, на md: вертикальный сайдбар */}
+                <aside className="w-full md:col-span-1 py-2 md:py-4 md:sticky md:top-28 h-fit overflow-x-auto md:overflow-x-visible">
+                    <nav className="flex flex-row md:flex-col gap-2 md:gap-4 whitespace-nowrap md:whitespace-normal pb-2 md:pb-0">
                     {menuItems.map((item, index) => {
                         const active = item.link === "/" || item.link === "/doctor" 
                             ? location.pathname === item.link 
                             : location.pathname.startsWith(item.link);
 
                         return (
-                            <AsideBtn 
-                                key={index} 
-                                BtnLink={item.link} 
-                                Name={item.name} 
-                                isActive={active} 
-                            />
+                            <div key={index} className="shrink-0 md:shrink">
+                                <AsideBtn 
+                                    BtnLink={item.link} 
+                                    Name={item.name} 
+                                    isActive={active} 
+                                />
+                            </div>
                         );
                     })}
                     </nav>
                 </aside>
-                <main className="col-span-4 py-4 px-6">
+                
+                {/* Основной контент динамически адаптируется под оставшуюся ширину экрана */}
+                <main className="w-full md:col-span-4 py-2 md:py-4 px-2 md:px-6 overflow-x-hidden">
                     <Outlet />
                 </main>
             </section>
             
-            <footer className="w-full rounded-lg shadow-md p-4 shrink-0 mt-auto">
+            <footer className="w-full rounded-lg shadow-md p-4 shrink-0 mt-auto text-center md:text-left">
                 Made by MuhammadMustafa
             </footer>
         </div>
