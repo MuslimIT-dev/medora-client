@@ -52,19 +52,27 @@ export default function Doctors() {
 	};
 
 	return (
-		<div>
-			<h1 className="font-bold text-2xl mb-4">Запись на прием</h1>
-			<div className="grid grid-cols-4 gap-4">
-				<div className="col-span-3 flex flex-col gap-3">
-					<select value={filters.type} onChange={handleChange} className="border border-pistachio-dark rounded-lg p-2 bg-white outline-none w-64 text-xs font-semibold">
+		<div className="w-full max-w-full overflow-x-hidden px-1 sm:px-0">
+			<h1 className="font-bold text-xl sm:text-2xl mb-4">Запись на прием</h1>
+			
+			{/* Переключение сетки: 1 колонка на мобильных, flex-col-reverse чтобы фильтр был сверху, на lg: grid из 4 колонок */}
+			<div className="flex flex-col-reverse lg:grid lg:grid-cols-4 gap-4">
+				
+				{/* Список врачей: занимает всю ширину на мобильных и 3 колонки на десктопе */}
+				<div className="w-full lg:col-span-3 flex flex-col gap-3">
+					{/* w-64 заменен на max-w-xs и w-full для безопасности на узких экранах */}
+					<select value={filters.type} onChange={handleChange} className="border border-pistachio-dark rounded-lg p-2 bg-white outline-none w-full max-w-xs text-xs font-semibold">
 						{docTypes.map((type) => <option key={type} value={type}>{type}</option>)}
 					</select>
 					<h2 className="text-gray-500 text-xs font-medium">Фильтрация специалистов</h2>
 					<List filters={filters} Card={DocCard} getList={getDocsList} />
 				</div>
-				<div className="col-span-1">
+				
+				{/* Панель фильтров: занимает всю ширину на мобильных и 1 колонку на десктопе */}
+				<div className="w-full lg:col-span-1">
 					<FilterBar filters={filters} setFilters={setFilters} isEx={true} />
 				</div>
+
 			</div>
 		</div>
 	);
