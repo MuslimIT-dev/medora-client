@@ -431,85 +431,96 @@ export default function Chats() {
     }, [callStatus, isCaller]);
 
     return (
-        <div className="h-[85vh] flex gap-4 p-2 relative overflow-hidden text-sm">
-            <VideoCallOverlay
-                callStatus={callStatus}
-                onAccept={() => sendControlCommand("call_accept")}
-                onReject={() => sendControlCommand("call_reject")}
-            />
+    <div className="h-[calc(100vh-12rem)] md:h-[85vh] flex flex-col md:flex-row gap-4 p-1 sm:p-2 relative overflow-hidden text-sm w-full max-w-full">
+        <VideoCallOverlay
+            callStatus={callStatus}
+            onAccept={() => sendControlCommand("call_accept")}
+            onReject={() => sendControlCommand("call_reject")}
+        />
 
-            <div className="w-1/3 bg-white rounded-xl p-3 shadow overflow-y-auto flex flex-col gap-2">
-                <h2 className="font-bold mb-1 text-base text-gray-700">💬 Чаты</h2>
-                {chats.map((chat) => (
-                    <ChatItem
-                        key={chat.id}
-                        chat={chat}
-                        active={activeChat?.id === chat.id}
-                        onClick={setActiveChat}
-                    />
-                ))}
-            </div>
+        <div className={`w-full md:w-1/3 bg-white rounded-xl p-3 shadow overflow-y-auto flex flex-col gap-2 ${activeChat ? 'hidden md:flex' : 'flex'}`}>
+            <h2 className="font-bold mb-1 text-base text-gray-700">💬 Чаты</h2>
+            {chats.map((chat) => (
+                <ChatItem
+                    key={chat.id}
+                    chat={chat}
+                    active={activeChat?.id === chat.id}
+                    onClick={setActiveChat}
+                />
+            ))}
+        </div>
 
-            <div className="flex-1 bg-white rounded-xl shadow flex flex-col overflow-hidden relative">
-                {activeChat ? (
-                    <>
-                        <div className="p-4 border-b flex justify-between bg-gray-50/50 items-center font-semibold">
-                            <span>👨‍⚕️ {activeChat.name}</span>
+        <div className={`flex-1 bg-white rounded-xl shadow flex flex-col overflow-hidden relative ${activeChat ? 'flex' : 'hidden md:flex'}`}>
+            {activeChat ? (
+                <>
+                    <div className="p-3 sm:p-4 border-b flex flex-col sm:flex-row gap-2 sm:gap-0 justify-between bg-gray-50/50 sm:items-center font-semibold">
+                        <div className="flex items-center gap-2 justify-between sm:justify-start w-full sm:w-auto">
+                            <button 
+                                onClick={() => setActiveChat(null)} 
+                                className="md:hidden p-1.5 bg-gray-100 rounded-lg text-xs font-bold active:bg-gray-200"
+                            >
+                                ⬅ Назад
+                            </button>
+                            <span className="truncate max-w-[180px] sm:max-w-xs">👨‍⚕️ {activeChat.name}</span>
+                        </div>
+                        <div className="w-full sm:w-auto flex justify-end">
                             {callStatus === "idle" && (
                                 <button
                                     onClick={() => sendControlCommand("call_start")}
-                                    className="p-2 bg-pistachio-light/10 text-pistachio-dark rounded-xl font-bold hover:bg-pistachio-light hover:text-white transition shadow-sm text-xs"
+                                    className="w-full sm:w-auto p-2 bg-pistachio-light/10 text-pistachio-dark rounded-xl font-bold hover:bg-pistachio-light hover:text-white transition shadow-sm text-xs text-center"
                                 >
                                     📞 Видеоконсультация
                                 </button>
                             )}
                             {callStatus === "calling" && (
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
                                     <span className="text-xs text-amber-500 font-bold animate-pulse">Идет вызов...</span>
-                                    <button onClick={() => sendControlCommand("call_end")} className="px-2 py-1 bg-red-500 text-white font-bold text-xs rounded-lg">Отмена X</button>
+                                    <button onClick={() => sendControlCommand("call_end")} className="px-2 py-1 bg-red-500 text-white font-bold text-xs rounded-lg whitespace-nowrap">Отмена X</button>
                                 </div>
                             )}
                         </div>
-
-                        <VideoCallPanel
-                            callStatus={callStatus}
-                            localVideoRef={localVideoRef}
-                            remoteVideoRef={remoteVideoRef}
-                            isAudioMuted={isAudioMuted}
-                            isVideoMuted={isVideoMuted}
-                            onToggleAudio={toggleAudio}
-                            onToggleVideo={toggleVideo}
-                            onEndCall={() => sendControlCommand("call_end")}
-                        />
-
-                        <ChatMessages
-                            messages={messages}
-                            userId={user.id}
-                            onEdit={handleEditMessage}
-                            onDelete={handleDeleteMessage}
-                        />
-
-                        <ChatInput
-                            input={input}
-                            setInput={setInput}
-                            onSend={handleSendMessage}
-                        />
-                    </>
-                ) : (
-                    <div className="flex h-full items-center justify-center text-gray-400 font-medium">
-                        Выберите чат для начала общения
                     </div>
-                )}
-            </div>
 
-            {isFormOpen && currentRole?.toLowerCase() === "doctor" && (
-                <DocProtocolForm
-                    form={form}
-                    setForm={setForm}
-                    onClose={() => setIsFormOpen(false)}
-                    onSubmit={handleCompleteVisit}
-                />
+                    <VideoCallPanel
+                        callStatus={callStatus}
+                        localVideoRef={localVideoRef}
+                        remoteVideoRef={remoteVideoRef}
+                        isAudioMuted={isAudioMuted}
+                        isVideoMuted={isVideoMuted}
+                        onToggleAudio={toggleAudio}
+                        onToggleVideo={toggleVideo}
+                        onEndCall={() => sendControlCommand("call_end")}
+                    />
+
+                    <ChatMessages
+                        messages={messages}
+                        userId={user.id}
+                        onEdit={handleEditMessage}
+                        onDelete={handleDeleteMessage}
+                    />
+
+                    <ChatInput
+                        input={input}
+                        setInput={setInput}
+                        onSend={handleSendMessage}
+                    />
+                </>
+            ) : (
+                <div className="flex h-full items-center justify-center text-gray-400 font-medium p-4 text-center">
+                    Выберите чат для начала общения
+                </div>
             )}
         </div>
-    );
+
+        {isFormOpen && currentRole?.toLowerCase() === "doctor" && (
+            <DocProtocolForm
+                form={form}
+                setForm={setForm}
+                onClose={() => setIsFormOpen(false)}
+                onSubmit={handleCompleteVisit}
+            />
+        )}
+    </div>
+);
+
 }
