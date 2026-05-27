@@ -92,50 +92,28 @@ export default function DocProtocolForm({ form, setForm, onClose, onSubmit }) {
 		const newDir = {
 			targetType: defaultType,
 			targetId: Number(defaultId),
-			description: ""
-		};
-		setForm(prev => ({
-			...prev,
-			directions: [...(prev?.directions || []), newDir]
-		}));
-	};
-
-	const updateDirectionBlock = (index, updatedFields) => {
-		setForm(prev => ({
-			...prev,
-			directions: prev.directions.map((d, i) => i === index ? { ...d, ...updatedFields } : d)
-		}));
-	};
-
-	const removeDirectionBlock = (index) => {
-		setForm(prev => ({ ...prev, directions: prev.directions.filter((_, i) => i !== index) }));
-	};
-
-	if (!form || !form.diseases) {
-		return <div className="p-4 text-center text-xs text-gray-400">Загрузка медицинских справочников...</div>;
-	}
-
-	return (
-		<div className="w-96 bg-white border-l shadow-2xl p-4 flex flex-col h-full overflow-y-auto shrink-0 z-50">
+return (
+		/* Удален фиксированный w-96 и shrink-0, чтобы панель могла сжиматься и растягиваться. Добавлен адаптивный fixed на мобильных */
+		<div className="w-full lg:w-96 bg-white border-l shadow-2xl p-4 flex flex-col h-full overflow-y-auto z-50 fixed inset-0 lg:relative lg:inset-auto box-border">
 			<div className="flex justify-between items-center border-b pb-2 mb-3 shrink-0">
-				<h2 className="font-bold text-sm text-gray-800">📋 Электронный протокол визита</h2>
-				<button type="button" onClick={onClose} className="text-gray-400 hover:text-red-500 font-bold text-sm p-1">✕</button>
+				<h2 className="font-bold text-sm text-gray-800">📋 Электронный $(<span className="text-[11px] font-normal text-gray-400 lg:hidden">меню</span>) протокол визита</h2>
+				<button type="button" onClick={onClose} className="text-gray-400 hover:text-red-500 font-bold text-base p-1 px-2 border rounded-lg lg:border-none active:bg-gray-100">✕</button>
 			</div>
 
-			<form onSubmit={onSubmit} className="flex flex-col gap-4 text-xs flex-1">
+			<form onSubmit={onSubmit} className="flex flex-col gap-4 text-xs flex-1 pb-16 lg:pb-0">
 
 				{/* ЗАБОЛЕВАНИЯ И ДИАГНОЗЫ */}
-				<div className="bg-blue-50/40 p-3 rounded-xl border border-blue-100 flex flex-col gap-2">
+				<div className="bg-blue-50/40 p-3 rounded-xl border border-blue-100 flex flex-col gap-2 w-full box-border">
 					<label className="font-bold text-blue-800 block">🧬 Установленные диагнозы</label>
 
-					<div className="flex flex-wrap gap-2 mb-2">
+					<div className="flex flex-wrap gap-1.5 mb-1 max-w-full">
 						{form.diseases?.map(d => (
-							<span key={d.id} className="bg-pistachio-light/20 text-pistachio-dark font-semibold px-3 py-1 rounded-full text-[11px] flex items-center gap-1.5 shadow-sm border border-pistachio-light/30">
-								{d.name}
+							<span key={d.id} className="bg-pistachio-light/20 text-pistachio-dark font-semibold px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] flex items-center gap-1 shadow-sm border border-pistachio-light/30 max-w-full truncate">
+								<span className="truncate">{d.name}</span>
 								<button
 									type="button"
 									onClick={() => setForm({ ...form, diseases: form.diseases.filter(i => i.id !== d.id) })}
-									className="font-bold hover:text-red-500 transition ml-0.5"
+									className="font-bold hover:text-red-500 transition ml-0.5 text-xs shrink-0"
 								>
 									×
 								</button>
@@ -143,13 +121,13 @@ export default function DocProtocolForm({ form, setForm, onClose, onSubmit }) {
 						))}
 					</div>
 
-					<div className="relative">
+					<div className="relative w-full">
 						<input
-							placeholder="Поиск болезни (или нажмите Enter)..."
+							placeholder="Поиск болезни..."
 							value={illnessSearch}
 							onChange={e => setIllnessSearch(e.target.value)}
 							onKeyDown={handleAddIllness}
-							className="w-full p-2.5 border rounded-xl bg-white outline-none focus:border-pistachio-light shadow-sm"
+							className="w-full p-2 sm:p-2.5 border rounded-xl bg-white outline-none focus:border-pistachio-light shadow-sm text-xs"
 						/>
 						{filteredIllnesses.length > 0 && (
 							<div className="absolute top-full left-0 w-full bg-white border rounded-xl shadow-lg z-50 max-h-40 overflow-y-auto mt-1 border-gray-100">
@@ -162,7 +140,7 @@ export default function DocProtocolForm({ form, setForm, onClose, onSubmit }) {
 											}
 											setIllnessSearch("");
 										}}
-										className="p-2.5 hover:bg-gray-50 cursor-pointer text-xs border-b border-gray-50 last:border-none text-gray-700 font-medium"
+										className="p-2.5 hover:bg-gray-50 cursor-pointer text-xs border-b border-gray-50 last:border-none text-gray-700 font-medium break-words"
 									>
 										{d.name}
 									</div>
@@ -173,54 +151,54 @@ export default function DocProtocolForm({ form, setForm, onClose, onSubmit }) {
 				</div>
 
 				{/* НАЗНАЧЕНИЕ ЛЕКАРСТВ */}
-				<div className="bg-purple-50/40 p-3 rounded-xl border border-purple-100 flex flex-col gap-2">
-					<div className="flex justify-between items-center">
-						<label className="font-bold text-purple-800">💊 Назначение лекарств</label>
-						<button type="button" onClick={addMedicationBlock} className="text-purple-600 font-bold hover:underline">+ Добавить</button>
+				<div className="bg-purple-50/40 p-3 rounded-xl border border-purple-100 flex flex-col gap-2 w-full box-border">
+					<div className="flex justify-between items-center gap-2">
+						<label className="font-bold text-purple-800 truncate">💊 Назначение лекарств</label>
+						<button type="button" onClick={addMedicationBlock} className="text-purple-600 font-bold hover:underline shrink-0 text-xs">+ Добавить</button>
 					</div>
 					{form.medications?.map((med, idx) => (
-						<div key={idx} className="bg-white border rounded-xl p-3 shadow-sm relative flex flex-col gap-2 mt-1">
-							<button type="button" onClick={() => removeMedicationBlock(idx)} className="absolute top-2 right-2 text-gray-300 hover:text-red-500 font-bold">&times;</button>
-							<div>
+						<div key={idx} className="bg-white border rounded-xl p-3 shadow-sm relative flex flex-col gap-2 mt-1 w-full box-border">
+							<button type="button" onClick={() => removeMedicationBlock(idx)} className="absolute top-2 right-2 text-gray-300 hover:text-red-500 font-bold text-sm p-1">&times;</button>
+							<div className="pr-4">
 								<label className="text-gray-400 block mb-0.5">Препарат</label>
-								<select value={med.medication_id} onChange={(e) => updateMedicationBlock(idx, "medication_id", Number(e.target.value))} className="w-full border p-1.5 rounded bg-white">
+								<select value={med.medication_id} onChange={(e) => updateMedicationBlock(idx, "medication_id", Number(e.target.value))} className="w-full border p-1.5 rounded bg-white text-xs max-w-full truncate">
 									{catalogMeds.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
 								</select>
 							</div>
-							<div className="grid grid-cols-2 gap-1.5">
-								<div>
-									<label className="text-gray-400 block mb-0.5">Дозировка</label>
-									<input value={med.dosage} onChange={(e) => updateMedicationBlock(idx, "dosage", e.target.value)} className="w-full border p-1.5 rounded" placeholder="500мг / 1 таб" />
+							<div className="grid grid-cols-2 gap-2 w-full">
+								<div className="min-w-0">
+									<label className="text-gray-400 block mb-0.5 truncate">Дозировка</label>
+									<input value={med.dosage} onChange={(e) => updateMedicationBlock(idx, "dosage", e.target.value)} className="w-full border p-1.5 rounded text-xs min-w-0" placeholder="500мг / 1 таб" />
 								</div>
-								<div>
-									<label className="text-gray-400 block mb-0.5">Дней курса</label>
-									<input type="number" value={med.duration_days} onChange={(e) => updateMedicationBlock(idx, "duration_days", Number(e.target.value))} className="w-full border p-1.5 rounded" />
+								<div className="min-w-0">
+									<label className="text-gray-400 block mb-0.5 truncate">Дней курса</label>
+									<input type="number" value={med.duration_days} onChange={(e) => updateMedicationBlock(idx, "duration_days", Number(e.target.value))} className="w-full border p-1.5 rounded text-xs min-w-0" />
 								</div>
 							</div>
-							<div className="grid grid-cols-2 gap-1.5">
-								<div>
-									<label className="text-gray-400 block mb-0.5">Интервал</label>
-									<select value={med.interval_type} onChange={(e) => updateMedicationBlock(idx, "interval_type", e.target.value)} className="w-full border p-1.5 rounded bg-white">
+							<div className="grid grid-cols-2 gap-2 w-full">
+								<div className="min-w-0">
+									<label className="text-gray-400 block mb-0.5 truncate">Интервал</label>
+									<select value={med.interval_type} onChange={(e) => updateMedicationBlock(idx, "interval_type", e.target.value)} className="w-full border p-1.5 rounded bg-white text-xs min-w-0">
 										<option value="day">Раз в день</option>
 										<option value="week">Раз в неделю</option>
 										<option value="month">Раз в месяц</option>
 									</select>
 								</div>
-								<div>
-									<label className="text-gray-400 block mb-0.5">Часы приема</label>
-									<input value={med.time_hours} onChange={(e) => updateMedicationBlock(idx, "time_hours", e.target.value)} className="w-full border p-1.5 rounded" placeholder="08:00,20:00" />
+								<div className="min-w-0">
+									<label className="text-gray-400 block mb-0.5 truncate">Часы приема</label>
+									<input value={med.time_hours} onChange={(e) => updateMedicationBlock(idx, "time_hours", e.target.value)} className="w-full border p-1.5 rounded text-xs min-w-0" placeholder="08:00,20:00" />
 								</div>
 							</div>
-							<input value={med.description} onChange={(e) => updateMedicationBlock(idx, "description", e.target.value)} className="w-full border p-1.5 rounded text-[11px]" placeholder="Примечание к приему" />
+							<input value={med.description} onChange={(e) => updateMedicationBlock(idx, "description", e.target.value)} className="w-full border p-1.5 rounded text-[11px] mt-1 w-full box-border" placeholder="Примечание к приему" />
 						</div>
 					))}
 				</div>
 
-				{/* НАПРАВЛЕНИЯ И АНАЛИЗЫ */}
-				<div className="bg-amber-50/40 p-3 rounded-xl border border-amber-100 flex flex-col gap-2">
-					<div className="flex justify-between items-center">
-						<label className="font-bold text-amber-800">📋 Направления и анализы</label>
-						<button type="button" onClick={addDirectionBlock} className="text-amber-600 font-bold hover:underline">+ Добавить</button>
+{/* НАПРАВЛЕНИЯ И АНАЛИЗЫ */}
+				<div className="bg-amber-50/40 p-3 rounded-xl border border-amber-100 flex flex-col gap-2 w-full box-border">
+					<div className="flex justify-between items-center gap-2">
+						<label className="font-bold text-amber-800 truncate">📋 Направления и анализы</label>
+						<button type="button" onClick={addDirectionBlock} className="text-amber-600 font-bold hover:underline shrink-0 text-xs">+ Добавить</button>
 					</div>
 					{form.directions?.map((dir, idx) => {
 						let currentSubCatalog = [];
@@ -229,12 +207,12 @@ export default function DocProtocolForm({ form, setForm, onClose, onSubmit }) {
 						if (dir.targetType === "procedure") currentSubCatalog = catalogProcedures;
 
 						return (
-							<div key={idx} className="bg-white border rounded-xl p-3 shadow-sm relative flex flex-col gap-2 mt-1">
-								<button type="button" onClick={() => removeDirectionBlock(idx)} className="absolute top-2 right-2 text-gray-300 hover:text-red-500 font-bold">&times;</button>
+							<div key={idx} className="bg-white border rounded-xl p-3 shadow-sm relative flex flex-col gap-2 mt-1 w-full box-border">
+								<button type="button" onClick={() => removeDirectionBlock(idx)} className="absolute top-2 right-2 text-gray-300 hover:text-red-500 font-bold text-sm p-1">&times;</button>
 
-								<div className="grid grid-cols-2 gap-2">
-									<div>
-										<label className="text-gray-400 block mb-0.5 text-[10px]">Категория</label>
+								<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full mt-2 sm:mt-0">
+									<div className="min-w-0">
+										<label className="text-gray-400 block mb-0.5 text-[10px] truncate">Категория</label>
 										<select
 											value={dir.targetType || "doctor"}
 											onChange={(e) => {
@@ -246,7 +224,7 @@ export default function DocProtocolForm({ form, setForm, onClose, onSubmit }) {
 
 												updateDirectionBlock(idx, { targetType: nextType, targetId: Number(firstId) });
 											}}
-											className="w-full border p-1.5 rounded bg-white outline-none font-medium"
+											className="w-full border p-1.5 rounded bg-white outline-none font-medium text-xs max-w-full truncate"
 										>
 											<option value="doctor">👨‍⚕️ Направление к врачу</option>
 											<option value="test">🧪 Сдать анализ</option>
@@ -256,12 +234,12 @@ export default function DocProtocolForm({ form, setForm, onClose, onSubmit }) {
 									</div>
 
 									{dir.targetType !== "hospitalization" ? (
-										<div>
-											<label className="text-gray-400 block mb-0.5 text-[10px]">Тип назначения</label>
+										<div className="min-w-0">
+											<label className="text-gray-400 block mb-0.5 text-[10px] truncate">Тип назначения</label>
 											<select
 												value={dir.targetId || ""}
 												onChange={(e) => updateDirectionBlock(idx, { targetId: Number(e.target.value) })}
-												className="w-full border p-1.5 rounded bg-white outline-none text-gray-700"
+												className="w-full border p-1.5 rounded bg-white outline-none text-gray-700 text-xs max-w-full truncate"
 											>
 												{currentSubCatalog.map(item => (
 													<option key={item.id} value={item.id}>
@@ -271,26 +249,26 @@ export default function DocProtocolForm({ form, setForm, onClose, onSubmit }) {
 											</select>
 										</div>
 									) : (
-										<div>
-											<label className="text-gray-400 block mb-0.5 text-[10px]">Стационар</label>
+										<div className="min-w-0">
+											<label className="text-gray-400 block mb-0.5 text-[10px] truncate">Стационар</label>
 											<select
 												value={dir.targetId || 1}
 												onChange={(e) => updateDirectionBlock(idx, { targetId: Number(e.target.value) })}
-												className="w-full border p-1.5 rounded bg-white outline-none text-gray-700 font-semibold"
+												className="w-full border p-1.5 rounded bg-white outline-none text-gray-700 font-semibold text-xs max-w-full truncate"
 											>
 												<option value="1">Общая палата терапии</option>
-												<option value="2">Палата интенсивной реанимации</option>
+												<option value="2">Палата intensive реанимации</option>
 											</select>
 										</div>
 									)}
 								</div>
 
-								<div>
-									<label className="text-gray-400 block mb-0.5 text-[10px]">Инструкция к направлению</label>
+								<div className="w-full box-border">
+									<label className="text-gray-400 block mb-0.5 text-[10px] truncate">Инструкция к направлению</label>
 									<textarea
 										value={dir.description || ""}
 										onChange={(e) => updateDirectionBlock(idx, { description: e.target.value })}
-										className="w-full border p-1.5 rounded text-[11px] h-12 resize-none outline-none focus:border-pistachio-light text-gray-700"
+										className="w-full border p-1.5 rounded text-[11px] h-12 resize-none outline-none focus:border-pistachio-light text-gray-700 box-border"
 										placeholder="Укажите сопутствующие жалобы или требования к подготовке..."
 									/>
 								</div>
@@ -299,7 +277,7 @@ export default function DocProtocolForm({ form, setForm, onClose, onSubmit }) {
 					})}
 				</div>
 
-				<button type="submit" className="w-full py-3 bg-pistachio-light text-white font-bold rounded-xl mt-auto hover:bg-pistachio-dark transition text-sm shadow">
+				<button type="submit" className="w-full py-3 bg-pistachio-light text-white font-bold rounded-xl mt-2 lg:mt-auto hover:bg-pistachio-dark transition text-sm shadow text-center active:scale-95 transition-transform">
 					✓ Фиксировать и завершить прием
 				</button>
 			</form>
