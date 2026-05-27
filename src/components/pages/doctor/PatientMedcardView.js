@@ -100,23 +100,23 @@ export default function PatientMedcardView() {
         }
 
         return (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fadeIn">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-fadeIn w-full box-border">
                 {currentItems.map((item) => {
                     if (activeTab === 'analyses') {
                         const isHigh = item.status === 'high';
                         const isLow = item.status === 'low';
                         return (
-                            <div key={item.id} className={`p-4 rounded-xl border bg-white shadow-sm flex justify-between items-center ${isHigh ? 'border-red-200 bg-red-50/20' : isLow ? 'border-blue-200 bg-blue-50/20' : 'border-gray-100'}`}>
-                                <div>
-                                    <h4 className="font-semibold text-gray-800">{item.title}</h4>
-                                    <div className="flex items-baseline gap-2 mt-1">
-                                        <span className={`text-xl font-bold ${isHigh ? 'text-red-600' : isLow ? 'text-blue-600' : 'text-gray-900'}`}>
+                            <div key={item.id} className={`p-3 sm:p-4 rounded-xl border bg-white shadow-sm flex justify-between items-center gap-2 w-full box-border ${isHigh ? 'border-red-200 bg-red-50/20' : isLow ? 'border-blue-200 bg-blue-50/20' : 'border-gray-100'}`}>
+                                <div className="min-w-0 flex-1">
+                                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base truncate">{item.title}</h4>
+                                    <div className="flex flex-wrap items-baseline gap-1 sm:gap-2 mt-1">
+                                        <span className={`text-lg sm:text-xl font-bold ${isHigh ? 'text-red-600' : isLow ? 'text-blue-600' : 'text-gray-900'}`}>
                                             {item.value}
                                         </span>
-                                        <span className="text-xs text-gray-400">(Реф: {item.min} - {item.max})</span>
+                                        <span className="text-[10px] sm:text-xs text-gray-400 whitespace-nowrap">(Реф: {item.min} - {item.max})</span>
                                     </div>
                                 </div>
-                                <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${isHigh ? 'bg-red-100 text-red-700' : isLow ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
+                                <span className={`px-2 py-1 rounded-md text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 ${isHigh ? 'bg-red-100 text-red-700' : isLow ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
                                     {isHigh ? 'Высокий' : isLow ? 'Низкий' : 'Норма'}
                                 </span>
                             </div>
@@ -128,26 +128,26 @@ export default function PatientMedcardView() {
                         return (
                             <a 
                                 key={item.id} href={fileUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
-                                className="p-4 bg-gray-50 border border-gray-100 rounded-xl flex justify-between items-center hover:border-pistachio-light hover:bg-white transition shadow-sm no-underline text-current"
+                                className="p-3 sm:p-4 bg-gray-50 border border-gray-100 rounded-xl flex justify-between items-center gap-2 hover:border-pistachio-light hover:bg-white transition shadow-sm no-underline text-current w-full box-border"
                             >
-                                <div>
-                                    <h4 className="font-semibold text-gray-800">📄 {item.title}</h4>
-                                    <span className="text-xs text-gray-400">📅 {new Date(item.date).toLocaleDateString()}</span>
+                                <div className="min-w-0 flex-1">
+                                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base truncate">📄 {item.title}</h4>
+                                    <span className="text-[10px] sm:text-xs text-gray-400 block mt-0.5">📅 {new Date(item.date).toLocaleDateString()}</span>
                                 </div>
-                                <span className="text-xs bg-pistachio-light text-white font-bold px-3 py-1 rounded-lg">Открыть 📥</span>
+                                <span className="text-[10px] sm:text-xs bg-pistachio-light text-white font-bold px-2.5 py-1 rounded-lg shrink-0 whitespace-nowrap">Открыть 📥</span>
                             </a>
                         );
                     }
 
                     return (
-                        <div key={item.id} className="p-4 bg-gray-50 border border-gray-100 rounded-xl shadow-sm flex flex-col gap-1">
-                            <div className="flex justify-between items-start">
-                                <h4 className="font-semibold text-gray-800 text-base">{item.title}</h4>
-                                <span className="text-[10px] text-gray-400 bg-white px-2 py-0.5 rounded border border-gray-100">
+                        <div key={item.id} className="p-3 sm:p-4 bg-gray-50 border border-gray-100 rounded-xl shadow-sm flex flex-col gap-1 w-full box-border">
+                            <div className="flex justify-between items-start gap-2">
+                                <h4 className="font-semibold text-gray-800 text-sm sm:text-base break-words min-w-0 flex-1">{item.title}</h4>
+                                <span className="text-[9px] sm:text-[10px] text-gray-400 bg-white px-1.5 py-0.5 rounded border border-gray-100 shrink-0 whitespace-nowrap">
                                     {new Date(item.date).toLocaleDateString()}
                                 </span>
                             </div>
-                            <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+                            <p className="text-xs sm:text-sm text-gray-600 mt-1 break-words">{item.description}</p>
                         </div>
                     );
                 })}
@@ -156,48 +156,48 @@ export default function PatientMedcardView() {
     };
 
     return (
-        <div className="flex gap-4 max-w-7xl mx-auto relative text-sm items-start">
-            <div className="flex-1 flex flex-col gap-6">
+        <div className="flex flex-col lg:flex-row gap-4 max-w-7xl mx-auto relative text-sm items-start w-full box-border px-1 sm:px-0 overflow-x-hidden">
+            <div className="flex-1 flex flex-col gap-4 sm:gap-6 w-full min-w-0">
                 <button 
                     onClick={() => navigate('/doctor/patients')}
-                    className="w-fit text-xs font-bold text-gray-400 hover:text-pistachio-dark flex items-center gap-1 transition"
+                    className="w-fit text-xs font-bold text-gray-400 hover:text-pistachio-dark flex items-center gap-1 transition p-1"
                 >
                     ← Вернуться к списку пациентов
                 </button>
 
-                <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-100 flex flex-col md:flex-row justify-between gap-4 items-center">
-                    <div className="space-y-1">
-                        <h1 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-md border border-gray-100 flex flex-col md:flex-row justify-between gap-4 items-start md:items-center w-full box-border">
+                    <div className="space-y-1 min-w-0 w-full md:w-auto">
+                        <h1 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center flex-wrap gap-2 break-all">
                             👤 {patient_info.fullname}
-                            <span className="text-xs bg-pistachio-light/10 text-pistachio-dark font-bold px-2 py-0.5 rounded-md">
+                            <span className="text-[10px] sm:text-xs bg-pistachio-light/10 text-pistachio-dark font-bold px-2 py-0.5 rounded-md whitespace-nowrap">
                                 {getAge(patient_info.birth_date)}
                             </span>
                         </h1>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-[11px] sm:text-xs text-gray-500 break-words leading-relaxed">
                             Пол: <strong className="text-gray-700">{patient_info.gender === 'male' ? 'Мужской' : 'Женский'}</strong> | 
                             Рождение: <strong className="text-gray-700">{patient_info.birth_date !== '—' ? new Date(patient_info.birth_date).toLocaleDateString() : '—'}</strong>
                         </p>
                     </div>
-                    <div className="flex items-center gap-3 w-full md:w-auto justify-end">
-                        <div className="text-left md:text-right bg-gray-50 p-3 rounded-xl border md:min-w-[180px] flex flex-col justify-center">
-                            <span className="text-[10px] text-gray-400 block">Контактный телефон</span>
-                            <strong className="text-gray-700 text-xs">{patient_info.phone}</strong>
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto sm:justify-end">
+                        <div className="text-left bg-gray-50 p-2.5 sm:p-3 rounded-xl border sm:min-w-[180px] flex flex-col justify-center min-w-0">
+                            <span className="text-[9px] sm:text-[10px] text-gray-400 block">Контактный телефон</span>
+                            <strong className="text-gray-700 text-xs sm:text-sm truncate mt-0.5">{patient_info.phone}</strong>
                         </div>
                         <button 
                             onClick={() => setIsFormOpen(true)}
-                            className="px-4 py-3 bg-pistachio-dark text-white font-bold rounded-xl text-xs hover:bg-pistachio-light transition shadow-md whitespace-nowrap h-fit"
+                            className="px-4 py-3 bg-pistachio-dark text-white font-bold rounded-xl text-xs hover:bg-pistachio-light transition shadow-md whitespace-nowrap h-fit text-center active:scale-95 transition-transform"
                         >
                             ➕ Начать очный осмотр
                         </button>
                     </div>
                 </div>
 
-                <div className="flex border-b border-gray-200 overflow-x-auto gap-2 scrollbar-none shrink-0">
+                <div className="flex border-b border-gray-200 overflow-x-auto gap-1 sm:gap-2 scrollbar-none shrink-0 w-full box-border">
                     {TABS.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`py-2.5 px-4 font-bold text-sm whitespace-nowrap border-b-2 transition-all ${
+                            className={`py-2 px-3 sm:py-2.5 sm:px-4 font-bold text-xs sm:text-sm whitespace-nowrap border-b-2 transition-all ${
                                 activeTab === tab.id ? `${tab.color} border-current` : 'border-transparent text-gray-400 hover:text-gray-600'
                             }`}
                         >
@@ -206,8 +206,8 @@ export default function PatientMedcardView() {
                     ))}
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 min-h-[300px]">
-                    <h2 className="text-base font-bold text-gray-700 uppercase tracking-wide mb-4">
+                <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-100 min-h-[250px] sm:min-h-[300px] w-full box-border">
+                    <h2 className="text-sm sm:text-base font-bold text-gray-700 uppercase tracking-wide mb-4 break-words">
                         {TABS.find(t => t.id === activeTab)?.name} пациента
                     </h2>
                     {renderTabContent()}
@@ -215,7 +215,7 @@ export default function PatientMedcardView() {
             </div>
 
             {isFormOpen && (
-                <div className="sticky top-5 h-[85vh] animate-slideLeft shrink-0">
+                <div className="w-full lg:w-auto lg:sticky lg:top-24 h-auto lg:h-[calc(100vh-10rem)] animate-slideLeft shrink-0 mt-4 lg:mt-0 box-border">
                     <DocProtocolForm 
                         form={form} 
                         setForm={setForm} 
