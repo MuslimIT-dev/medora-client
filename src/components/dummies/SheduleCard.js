@@ -64,33 +64,33 @@ const SheduleCard = ({ type, id, aptData, setAptData }) => {
 	};
 
 	return (
-		<div className={loading ? "opacity-50 pointer-events-none" : ""}>
-			<div className="mb-4 flex items-center justify-between px-2">
+		<div className={`w-full box-border ${loading ? "opacity-50 pointer-events-none" : ""}`}>
+			<div className="mb-4 flex items-center justify-between px-1 sm:px-2">
 				<button
 					onClick={() => changeMonth(-1)}
 					disabled={isPast}
-					className="w-8 h-8 flex items-center justify-center border rounded-full disabled:opacity-20"
+					className="w-8 h-8 flex items-center justify-center border rounded-full disabled:opacity-20 shrink-0 active:scale-95 transition-transform"
 				>
 					{"<"}
 				</button>
-				<span className="font-bold text-gray-700 capitalize">
+				<span className="font-bold text-gray-700 capitalize text-sm sm:text-base truncate px-1">
 					{new Date(year, month - 1).toLocaleString('ru', { month: 'long' })} {year}
 				</span>
 				<button
 					onClick={() => changeMonth(1)}
-					className="w-8 h-8 flex items-center justify-center border rounded-full"
+					className="w-8 h-8 flex items-center justify-center border rounded-full shrink-0 active:scale-95 transition-transform"
 				>
 					{">"}
 				</button>
 			</div>
 
-			<div className="grid grid-cols-7 gap-1 text-center">
+			<div className="grid grid-cols-7 gap-1 text-center w-full min-w-0">
 				{weekDays.map(d => (
-					<div key={d} className="text-[10px] uppercase text-gray-400 font-bold py-1">{d}</div>
+					<div key={d} className="text-[9px] sm:text-[10px] uppercase text-gray-400 font-bold py-1 truncate">{d}</div>
 				))}
 
 				{Array.from({ length: startOffset }).map((_, i) => (
-					<div key={`empty-${i}`} />
+					<div key={`empty-${i}`} className="aspect-square" />
 				))}
 
 				{Array.from({ length: daysInMonth }, (_, i) => {
@@ -106,9 +106,9 @@ const SheduleCard = ({ type, id, aptData, setAptData }) => {
 							disabled={isOldDay || !isFree}
 							onClick={() => handleDayClick(day)}
 							className={`
-								aspect-square flex items-center justify-center text-sm rounded-lg transition-all
-								${isSelected ? "bg-pistachio-dark text-white ring-2 ring-offset-1 ring-pistachio-dark" : ""}
-								${isFree && !isOldDay ? "bg-green-100 text-green-700 font-bold" : "text-gray-300"}
+								aspect-square flex items-center justify-center text-xs sm:text-sm rounded-lg transition-all w-full p-0
+								${isSelected ? "bg-pistachio-dark text-white ring-1 sm:ring-2 ring-offset-1 ring-pistachio-dark" : ""}
+								${isFree && !isOldDay ? "bg-green-100 text-green-700 font-bold hover:bg-green-200" : "text-gray-300"}
 								${isOldDay ? "opacity-30 cursor-not-allowed" : ""}
 							`}
 						>
@@ -119,15 +119,16 @@ const SheduleCard = ({ type, id, aptData, setAptData }) => {
 			</div>
 
 			{selectedDay && !loading && (
-				<div className="mt-6 animate-fadeIn">
-					<div className="text-xs font-bold text-gray-400 uppercase mb-3 tracking-wider">Доступное время</div>
-					<div className="flex gap-2 flex-wrap">
+				<div className="mt-5 sm:mt-6 animate-fadeIn w-full box-border">
+					<div className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase mb-2 sm:mb-3 tracking-wider">Доступное время</div>
+					{/* Заменен flex на grid для идеального выравнивания кнопок времени на экранах смартфонов */}
+					<div className="grid grid-cols-3 sm:flex sm:flex-wrap gap-1.5 sm:gap-2 w-full">
 						{schedule.times[selectedDay]?.map((t) => (
 							<button
 								key={t}
 								onClick={() => setAptData({ ...aptData, time: t })}
 								className={`
-									px-4 py-2 text-sm rounded-xl border transition-all
+									px-2 py-2 sm:px-4 text-xs sm:text-sm rounded-xl border text-center transition-all truncate
 									${aptData.time === t ? "bg-pistachio-dark text-white border-pistachio-dark shadow-md" : "bg-white text-gray-700 border-gray-200 hover:border-pistachio-dark"}
 								`}
 							>
@@ -138,7 +139,7 @@ const SheduleCard = ({ type, id, aptData, setAptData }) => {
 				</div>
 			)}
 		</div>
-	);
+	);									
 };
 
 export default SheduleCard;
