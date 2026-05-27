@@ -104,16 +104,18 @@ const AppointmentPage = () => {
   const CardComponent = CARD_MAP[type] || DocCard;
 
   return (
-      <>
-          <h1 className="font-bold text-2xl">Запись: {type}</h1>
-          <div className="grid grid-cols-4 gap-8 py-4">
-              <main className="col-span-3">
-                  <CardComponent Data={cardData} />
+      <div className="w-full max-w-full overflow-x-hidden px-1 sm:px-0">
+          <h1 className="font-bold text-xl sm:text-2xl">Запись: {type}</h1>
+          <div className="flex flex-col lg:grid lg:grid-cols-4 gap-4 lg:gap-8 py-4">
+              <main className="w-full lg:col-span-3 flex flex-col">
+                  <div className="w-full overflow-x-hidden">
+                      <CardComponent Data={cardData} />
+                  </div>
 
-                  <div className="mt-6 p-4 shadow-md rounded-lg bg-white">
-                      <h3 className="font-bold mb-2">Выберите место:</h3>
+                  <div className="mt-4 sm:mt-6 p-3 sm:p-4 shadow-md rounded-lg bg-white w-full box-border">
+                      <h3 className="font-bold mb-2 text-sm sm:text-base">Выберите место:</h3>
                       <select 
-                          className="w-full p-2 border rounded bg-white outline-none"
+                          className="w-full p-2 border rounded bg-white outline-none text-sm sm:text-base"
                           value={selectedClinicId || ""}
                           onChange={(e) => setSelectedClinicId(e.target.value)}
                       >
@@ -123,13 +125,13 @@ const AppointmentPage = () => {
                       </select>
                   </div>
 
-                  <div className="mt-6 p-4 shadow-md rounded-lg bg-white">
-                      <h3 className="font-bold mb-2">Дата и время:</h3>
+                  <div className="mt-4 sm:mt-6 p-3 sm:p-4 shadow-md rounded-lg bg-white w-full box-border overflow-x-auto">
+                      <h3 className="font-bold mb-2 text-sm sm:text-base">Дата и время:</h3>
                       <SheduleCard type={type} id={id} aptData={aptData} setAptData={setAptData} />
                   </div>
               </main>
 
-              <aside className="col-span-1">
+              <aside className="w-full lg:col-span-1">
                   <OrderSummary 
                       aptData={aptData} 
                       cardData={cardData} 
@@ -137,8 +139,9 @@ const AppointmentPage = () => {
                   />
               </aside>
           </div>
-      </>
+      </div>
   );
 };
 
 export default AppointmentPage;
+                          
