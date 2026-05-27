@@ -277,9 +277,11 @@ return (
 					})}
 				</div>
 
-				<button type="submit" className="w-full py-3 bg-pistachio-light text-white font-bold rounded-xl mt-2 lg:mt-auto hover:bg-pistachio-dark transition text-sm shadow text-center active:scale-95 transition-transform">
-					✓ Фиксировать и завершить прием
-				</button>
+				<div className="w-full mt-4 pb-24 lg:pb-0 shrink-0">
+				    <button type="submit" className="w-full py-3 bg-pistachio-light text-white font-bold rounded-xl mt-2 lg:mt-auto hover:bg-pistachio-dark transition text-sm shadow text-center active:scale-95 transition-transform">
+					    ✓ Фиксировать и завершить прием
+				    </button>
+				</div>
 			</form>
 		</div>
 	);
