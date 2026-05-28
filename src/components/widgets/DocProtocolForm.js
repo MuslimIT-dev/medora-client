@@ -92,13 +92,26 @@ export default function DocProtocolForm({ form, setForm, onClose, onSubmit }) {
 		const newDir = {
 			targetType: defaultType,
 			targetId: Number(defaultId),
+			description: ""
 		};
+		setForm(prev => ({ ...prev, directions: [...(prev?.directions || []), newDir] }));
 	};
 
-return (
+	const updateDirectionBlock = (index, updates) => {
+		setForm(prev => ({
+			...prev,
+			directions: prev.directions.map((d, i) => i === index ? { ...d, ...updates } : d)
+		}));
+	};
+
+	const removeDirectionBlock = (index) => {
+		setForm(prev => ({ ...prev, directions: prev.directions.filter((_, i) => i !== index) }));
+	};
+
+	return (
 		<div className="w-full lg:w-96 bg-white border-l shadow-2xl p-4 flex flex-col h-full overflow-y-auto z-50 fixed inset-0 lg:relative lg:inset-auto box-border">
 			<div className="flex justify-between items-center border-b pb-2 mb-3 shrink-0">
-				<h2 className="font-bold text-sm text-gray-800">📋 Электронный $(<span className="text-[11px] font-normal text-gray-400 lg:hidden">меню</span>) протокол визита</h2>
+				<h2 className="font-bold text-sm text-gray-800">📋 Электронный <span className="text-[11px] font-normal text-gray-400 lg:hidden">меню</span> протокол визита</h2>
 				<button type="button" onClick={onClose} className="text-gray-400 hover:text-red-500 font-bold text-base p-1 px-2 border rounded-lg lg:border-none active:bg-gray-100">✕</button>
 			</div>
 
@@ -110,7 +123,7 @@ return (
 
 					<div className="flex flex-wrap gap-1.5 mb-1 max-w-full">
 						{form.diseases?.map(d => (
-							<span key={d.id} className="bg-pistachio-light/20 text-pistachio-dark font-semibold px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] flex items-center gap-1 shadow-sm border border-pistachio-light/30 max-w-full truncate">
+							<span key={d.id} className="bg-pistachio-light/20 text-pistachio-dark font-semibold px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] flex items-center gap-1 shadow-sm border border-pistachio-light/40">
 								<span className="truncate">{d.name}</span>
 								<button
 									type="button"
@@ -191,12 +204,12 @@ return (
 									<input value={med.time_hours} onChange={(e) => updateMedicationBlock(idx, "time_hours", e.target.value)} className="w-full border p-1.5 rounded text-xs min-w-0" placeholder="08:00,20:00" />
 								</div>
 							</div>
-							<input value={med.description} onChange={(e) => updateMedicationBlock(idx, "description", e.target.value)} className="w-full border p-1.5 rounded text-[11px] mt-1 w-full box-border" placeholder="Примечание к приему" />
+							<input value={med.description} onChange={(e) => updateMedicationBlock(idx, "description", e.target.value)} className="w-full border p-1.5 rounded text-[11px] mt-1 box-border" placeholder="Примечания к препарату" />
 						</div>
 					))}
 				</div>
 
-{/* НАПРАВЛЕНИЯ И АНАЛИЗЫ */}
+				{/* НАПРАВЛЕНИЯ И АНАЛИЗЫ */}
 				<div className="bg-amber-50/40 p-3 rounded-xl border border-amber-100 flex flex-col gap-2 w-full box-border">
 					<div className="flex justify-between items-center gap-2">
 						<label className="font-bold text-amber-800 truncate">📋 Направления и анализы</label>
