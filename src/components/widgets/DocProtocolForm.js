@@ -93,7 +93,6 @@ export default function DocProtocolForm({ form, setForm, onClose, onSubmit }) {
 			targetType: defaultType,
 			targetId: Number(defaultId),
 return (
-		/* Удален фиксированный w-96 и shrink-0, чтобы панель могла сжиматься и растягиваться. Добавлен адаптивный fixed на мобильных */
 		<div className="w-full lg:w-96 bg-white border-l shadow-2xl p-4 flex flex-col h-full overflow-y-auto z-50 fixed inset-0 lg:relative lg:inset-auto box-border">
 			<div className="flex justify-between items-center border-b pb-2 mb-3 shrink-0">
 				<h2 className="font-bold text-sm text-gray-800">📋 Электронный $(<span className="text-[11px] font-normal text-gray-400 lg:hidden">меню</span>) протокол визита</h2>
