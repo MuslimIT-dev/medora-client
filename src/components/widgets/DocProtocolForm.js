@@ -92,6 +92,9 @@ export default function DocProtocolForm({ form, setForm, onClose, onSubmit }) {
 		const newDir = {
 			targetType: defaultType,
 			targetId: Number(defaultId),
+		};
+	};
+
 return (
 		<div className="w-full lg:w-96 bg-white border-l shadow-2xl p-4 flex flex-col h-full overflow-y-auto z-50 fixed inset-0 lg:relative lg:inset-auto box-border">
 			<div className="flex justify-between items-center border-b pb-2 mb-3 shrink-0">
