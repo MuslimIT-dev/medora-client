@@ -257,9 +257,8 @@ export default function Chats() {
             console.log("WebRTC SUCCESS: Получен видеопоток от собеседника!", event.streams);
             if (remoteVideoRef.current && event.streams && event.streams[0]) {
                 remoteVideoRef.current.srcObject = event.streams[0];
-
                 remoteVideoRef.current.play().catch(err => {
-                    console.warn("Браузер заблокировал автоплей видео, пробуем повторно:", err);
+                    console.warn("Браузер заблокировал автоплей видео:", err);
                 });
             }
         };
@@ -275,29 +274,10 @@ export default function Chats() {
                 });
             }
         };
-
-        pc.current.oniceconnectionstatechange =
-            () => {
-                console.log(
-                    "ICE:",
-                    pc.current
-                        .iceConnectionState
-                );
-            };
-
-        pc.current.onconnectionstatechange =
-            () => {
-                console.log(
-                    "PC:",
-                    pc.current
-                        .connectionState
-                );
-            };
     };
 
-    const startWebRTC = async (caller) => {
+    const startWebRTC = async (caller, targetId) => {
         try {
-            const targetId = activeChatRef.current ? activeChatRef.current.id : incomingChatIdRef.current;
             if (!targetId) return;
 
             if (!localStream.current) {
@@ -312,6 +292,7 @@ export default function Chats() {
                 localVideoRef.current.play().catch(() => { });
             }
 
+            // Инициализируем соединение строго по переданному ID
             createPeerConnection(targetId);
 
             if (caller && pc.current) {
@@ -339,30 +320,18 @@ export default function Chats() {
             if (!data.sdp) return;
             const sdpObj = JSON.parse(data.sdp);
             const targetId = activeChatRef.current ? activeChatRef.current.id : incomingChatIdRef.current;
+            if (!targetId) return;
 
             if (data.content === "offer") {
-                console.log("WebRTC: Пациент обрабатывает входящий Offer...");
+                console.log("WebRTC: Обработка входящего Offer для комнаты:", targetId);
                 if (!localStream.current) {
                     localStream.current = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 }
-                if (localVideoRef.current) {
-                    localVideoRef.current.srcObject = localStream.current;
-                }
+                if (localVideoRef.current) localVideoRef.current.srcObject = localStream.current;
 
                 createPeerConnection(targetId);
 
-                await pc.current.setRemoteDescription(
-                    new RTCSessionDescription(
-                        sdpObj
-                    )
-                );
-
-                for (const c of pendingCandidates.current) {
-                    await pc.current.addIceCandidate(
-                        c
-                    );
-                }
-                pendingCandidates.current = [];
+                await pc.current.setRemoteDescription(new RTCSessionDescription(sdpObj));
                 const answer = await pc.current.createAnswer();
                 await pc.current.setLocalDescription(answer);
 
@@ -372,36 +341,25 @@ export default function Chats() {
                     content: "answer",
                     sdp: JSON.stringify(answer)
                 });
-                console.log("WebRTC: Answer отправлен врачу.");
+                console.log("WebRTC: Answer отправлен.");
 
             } else if (data.content === "answer") {
-                console.log("WebRTC: Врач зафиксировал Answer.");
+                console.log("WebRTC: Зафиксирован Answer.");
                 if (pc.current) {
                     await pc.current.setRemoteDescription(new RTCSessionDescription(sdpObj));
                 }
             } else if (data.content === "candidate") {
-                const candidate =
-                    new RTCIceCandidate(sdpObj);
-
-                if (
-                    pc.current &&
-                    pc.current.remoteDescription &&
-                    pc.current.remoteDescription.type
-                ) {
-                    await pc.current.addIceCandidate(
-                        candidate
-                    );
-                } else {
-                    pendingCandidates.current.push(
-                        candidate
-                    );
+                console.log("WebRTC: Получен удаленный ICE-кандидат");
+                if (pc.current) {
+                    await pc.current.addIceCandidate(new RTCIceCandidate(sdpObj)).catch(e => {
+                        console.warn("Ошибка добавления ICE-кандидата:", e);
+                    });
                 }
             }
         } catch (e) {
             console.error("Ошибка сигналинга:", e);
         }
     };
-
 
     const handleCompleteVisit = async (e) => {
         e.preventDefault();
