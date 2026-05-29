@@ -1,1 +1,1 @@
-export const API = "https://medora-server.onrender.com/api";
+export const API = "https://medora-server-production.up.railway.app/api";
